@@ -1,26 +1,17 @@
-import flet as ft
+import core.database as database
 
+from flet import *
+from ui.utils import ROUTES
+from ui.app import SkripsiApp
 
-def main(page: ft.Page):
-    counter = ft.Text("0", size=50, data=0)
+def main(page: Page):
+    # print(config["Database"]["host"])
+    database.initialize_database()
+    page.title = "Analisis Pola Pembelian Konsumen"
+    page.theme_mode = ThemeMode.LIGHT
+    page.padding = 0
+    page.theme = Theme(font_family="Bahnschrift")
+    page.add(SafeArea(content=SkripsiApp(page)))
+    page.go(ROUTES.DASHBOARD)
 
-    def increment_click(e):
-        counter.data += 1
-        counter.value = str(counter.data)
-        counter.update()
-
-    page.floating_action_button = ft.FloatingActionButton(
-        icon=ft.Icons.ADD, on_click=increment_click
-    )
-    page.add(
-        ft.SafeArea(
-            ft.Container(
-                counter,
-                alignment=ft.alignment.center,
-            ),
-            expand=True,
-        )
-    )
-
-
-ft.app(main)
+app(main)
