@@ -1,9 +1,32 @@
-import threading
 import core.database as db
 
-from flet import *
+from threading import Timer
 from ui.utils import COLORS
 from ui.widgets import CustomButton, LoadingDialog, CustomSnackbar
+from flet import (
+    Column,
+    Page,
+    ScrollMode,
+    TextField,
+    Icons,
+    DataColumn,
+    DataRow,
+    DataCell,
+    Text,
+    DataTable,
+    ControlState,
+    Colors,
+    TextStyle,
+    FontWeight,
+    Container,
+    TextThemeStyle,
+    Row,
+    MainAxisAlignment,
+    TextButton,
+    KeyboardType,
+    AlertDialog,
+    TextSpan,
+)
 
 
 class ShowItem(Column):
@@ -223,7 +246,7 @@ class ShowItem(Column):
             self.debounce_timer.cancel()
 
         # Start a new timer with a delay of 500ms
-        self.debounce_timer = threading.Timer(
+        self.debounce_timer = Timer(
             0.5,
             self.on_change_debounced,
             args=[e.control.value],
@@ -323,7 +346,7 @@ class ShowItem(Column):
             except Exception as e:
                 text = "Update data barang gagal"
                 color = Colors.RED_800
-                print(e)
+                # print(e)
             else:
                 text = "Update data barang berhasil"
                 color = Colors.GREEN_800
@@ -412,7 +435,7 @@ class ShowItem(Column):
             except Exception as e:
                 text = "Data barang gagal dihapus"
                 color = Colors.RED_800
-                print(e)
+                # print(e)
             else:
                 text = "Data barang berhasil dihapus"
                 color = Colors.GREEN_800

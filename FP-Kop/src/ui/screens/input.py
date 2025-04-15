@@ -1,4 +1,4 @@
-from flet import *
+from flet import Column, Page, ScrollMode, Container, Text, TextThemeStyle
 from ui.widgets import CustomButton
 from ui.utils import ROUTES, COLORS
 

@@ -1,35 +1,64 @@
-import mysql.connector
+from mysql import connector
 import configparser
+import os
 
-config = configparser.ConfigParser()
-config_path = 'src/config/config.ini'  # Sesuaikan dengan path file Anda
-config.read(config_path)
-
+def load_db_config():
+    config = configparser.ConfigParser()
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    # print(base_path)
+    parent_path = os.path.dirname(base_path)
+    # print(parent_path)
+    config_path = os.path.join(parent_path, 'config','config.ini')
+    # print(config_path)
+    try:
+        config.read(config_path)
+        return config
+    except Exception as e:
+        # print(f"Error reading config.ini: {e}")
+        return None
 
 # Initialize Database Connection
 def get_db_connection():
     connection = None
+    
+    config = load_db_config()
+    if config:
+        # print(config.sections())
+        try:
+            database_config = config['Database']
+        except KeyError:
+            # print("Bagian 'Database' tidak ditemukan di config.ini")
+            database_config = None
+    else:
+        database_config = None
+
+    if not database_config:
+        # print('')
+        return connection
+    
     try:
-        connection = mysql.connector.connect(
-            host=config["Database"]["host"],
-            user=config["Database"]["user"],
-            password=config["Database"]["password"],
-            database=config["Database"]["database"],
+        connection = connector.connect(
+            host=database_config.get('host'),
+            user=database_config.get('user'),
+            password=database_config.get('password'),
+            database=database_config.get('database')
         )
     except Exception as ex:
-        print(ex)
-        connection = mysql.connector.connect(
-            host=config["Database"]["host"],
-            user=config["Database"]["user"],
-            password=config["Database"]["password"],
+        # print(ex)
+        connection = connector.connect(
+            host=database_config.get('host'),
+            user=database_config.get('user'),
+            password=database_config.get('password'),
         )
 
     return connection
 
-
 # Function to Create Database and Table
 def initialize_database():
     conn = get_db_connection()
+    if not conn:
+        # print("Failed to initialized Database!")
+        return
     cursor = conn.cursor()
 
     # Create database if not exists
@@ -118,7 +147,7 @@ def initialize_database():
 
     cursor.close()
     conn.close()
-    print("Database initialized successfully!")
+    # print("Database initialized successfully!")
 
 
 # Function to Search and Paginate Results
@@ -293,7 +322,7 @@ def update_barang(kode_lama=None, kode_barang=None, barcode=None, nama_barang=No
 
     # If no valid updates, return early
     if not updates:
-        print("No valid fields to update!")
+        # print("No valid fields to update!")
         return False
 
     # Add kode_barang for WHERE clause
@@ -395,8 +424,8 @@ def get_detail_transaksi(
         params.append(limit)
 
     # Debug: Uncomment to print the final query and parameters
-    # print("Final Query:", query)
-    # print("Params:", params)
+    print("Final Query:", query)
+    print("Params:", params)
 
     # Execute the query
     cursor.execute(query, tuple(params))
@@ -433,7 +462,7 @@ def delete_detail_transaksi(id_detail, kode_transaksi):
             (kode_transaksi,),
         )
         results = cursor.fetchall()
-        print(results)
+        # print(results)
 
         if len(results) < 1:
             cursor.execute(
@@ -443,10 +472,10 @@ def delete_detail_transaksi(id_detail, kode_transaksi):
             conn.commit()
             success = cursor.rowcount > 0
     except ValueError as ex:
-        print(ex)
+        # print(ex)
         success = False
     except Exception as ex:
-        print(ex)
+        # print(ex)
         success = False
     finally:
         cursor.close()
@@ -473,7 +502,7 @@ def update_detail_transaksi(id_detail, kode_barang, jumlah):
 
     # If no valid updates, return early
     if not updates:
-        print("No valid fields to update!")
+        # print("No valid fields to update!")
         return False
 
     # SQL Query

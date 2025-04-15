@@ -1,17 +1,27 @@
-import datetime as dt
-import pandas as pd
-
-from mlxtend.frequent_patterns import fpgrowth
-from mlxtend.frequent_patterns import association_rules
-
-from flet import *
-
-from ui.widgets import DateField, CustomButton, LoadingDialog, CustomSnackbar
-from ui.widgets.date_field import DateField
-from ui.utils import COLORS, ROUTES
-
-from core.analysis_results import AnalysisResults
 import core.database as db
+
+from datetime import datetime
+from ui.utils import COLORS, ROUTES
+from ui.widgets.date_field import DateField
+from pandas import DataFrame, set_option, concat
+from core.analysis_results import AnalysisResults
+from mlxtend.frequent_patterns import fpgrowth, association_rules
+from ui.widgets import DateField, CustomButton, LoadingDialog, CustomSnackbar
+from flet import (
+    Column,
+    Page,
+    ScrollMode,
+    TextStyle,
+    FontWeight,
+    TextField,
+    Text,
+    Container,
+    Row,
+    TextThemeStyle,
+    DatePicker,
+    Colors,
+)
+
 
 class Process(Column):
     def __init__(self, page: Page, results: AnalysisResults):
@@ -94,7 +104,7 @@ class Process(Column):
         end = self.end_date_field.value if not self.end_date_field.value else None
 
         date_value = (
-            dt.datetime.strptime(
+            datetime.strptime(
                 start if is_start else end,
                 "%Y-%m-%d",
             )
@@ -105,8 +115,8 @@ class Process(Column):
         self.page.open(
             DatePicker(
                 value=date_value,
-                first_date=dt.datetime(year=2000, month=1, day=1),
-                last_date=dt.datetime(year=2500, month=12, day=31),
+                first_date=datetime(year=2000, month=1, day=1),
+                last_date=datetime(year=2500, month=12, day=31),
                 on_change=handle_change,
             ),
         )
@@ -119,7 +129,6 @@ class Process(Column):
         else:
             self.end_date_field.value = ""
             self.update()
-
 
     # start analyzing transactions data with minimum support and confidence
     def analyzing(self, e):
@@ -144,7 +153,7 @@ class Process(Column):
         is_valid = True
 
         if not is_valid:
-            print("Cannot empty")
+            # print("Cannot empty")
             return None
 
         self.page.overlay.clear()
@@ -171,17 +180,19 @@ class Process(Column):
             if not results:
                 raise Exception("data transaksi kosong")
 
-            pd.set_option("display.width", 0)
-            pd.set_option("display.max_columns", None)
-            
-            results_df = pd.DataFrame(results["data"])
+            set_option("display.width", 0)
+            set_option("display.max_columns", None)
 
-            items_df = pd.DataFrame(results_df[["kode_barang", "nama_barang"]].copy())
-            transactions_df = pd.DataFrame(results_df[["kode_transaksi", "tanggal_transaksi"]].copy())
+            results_df = DataFrame(results["data"])
+
+            items_df = DataFrame(results_df[["kode_barang", "nama_barang"]].copy())
+            transactions_df = DataFrame(
+                results_df[["kode_transaksi", "tanggal_transaksi"]].copy()
+            )
             # transactions_df = transactions_df.drop(columns="id", axis=1)
 
-            detil_df = pd.DataFrame()
-            detil_df = pd.concat([detil_df, transactions_df, items_df], axis=1)
+            detil_df = DataFrame()
+            detil_df = concat([detil_df, transactions_df, items_df], axis=1)
             detil_df = (
                 detil_df.groupby(["kode_transaksi", "tanggal_transaksi"])
                 .agg(
@@ -195,7 +206,7 @@ class Process(Column):
             # print(detil_df)
 
             # Konversi ke format dataframe untuk analisis
-            basket = pd.DataFrame()
+            basket = DataFrame()
             basket["kode_transaksi"] = transactions_df["kode_transaksi"]
             basket["kode_barang"] = items_df["kode_barang"]
             basket = (
@@ -206,7 +217,7 @@ class Process(Column):
             )
             basket.set_index("kode_transaksi", inplace=True)
             basket = basket.map(lambda x: True if x > 0 else False)
-            print(len(basket))
+            # print(len(basket))
 
             # Menerapkan FP-Growth
             support = float(self.minimum_support_field.value)
@@ -215,9 +226,9 @@ class Process(Column):
             if frequent_itemsets.empty:
                 raise Exception("Tidak menghasilkan frequent itemset")
 
-            print("Frequent Itemsets:")
-            print(frequent_itemsets)
-            
+            # print("Frequent Itemsets:")
+            # print(frequent_itemsets)
+
             # Aturan asosiasi
             confidence = float(self.minimum_confidence_field.value)
             rules = association_rules(
@@ -267,11 +278,11 @@ class Process(Column):
         except KeyboardInterrupt:
             text = "Proses analisis dibatalkan"
             color = Colors.RED
-            print("Canceled by User")
+            # print("Canceled by User")
         except Exception as ex:
             text = f"Proses analisis gagal, eror : {ex}"
             color = Colors.RED
-            print(ex)
+            # print(ex)
         else:
             text = "Proses analisis berhasil"
             color = Colors.GREEN

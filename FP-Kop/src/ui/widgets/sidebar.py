@@ -1,5 +1,22 @@
-from flet import *
 from ui.utils import COLORS, ROUTES
+from flet import (
+    Container,
+    Text,
+    Icons,
+    padding,
+    Column,
+    MainAxisAlignment,
+    Text,
+    TextStyle,
+    Colors,
+    GestureDetector,
+    Page,
+    MouseCursor,
+    Row,
+    border_radius,
+    Icon,
+    CrossAxisAlignment,
+)
 
 
 class Sidebar(Container):

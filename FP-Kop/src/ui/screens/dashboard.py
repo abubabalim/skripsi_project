@@ -1,10 +1,32 @@
-import pandas as pd
-import core.database  as db
+import core.database as db
 
-from flet import *
-from collections import defaultdict
 from ui.utils import COLORS
+from collections import defaultdict
+from pandas import DataFrame, set_option
 from ui.widgets.loading_dialog import LoadingDialog
+from flet import (
+    Column,
+    Page,
+    ScrollMode,
+    Container,
+    Text,
+    FontWeight,
+    TextThemeStyle,
+    CrossAxisAlignment,
+    Row,
+    TextSpan,
+    TextStyle,
+    padding,
+    Colors,
+    border_radius,
+    animation,
+    AnimationCurve,
+    Icons,
+    IconButton,
+    MainAxisAlignment,
+    Divider,
+    alignment,
+)
 
 
 class Dashboard(Column):
@@ -12,8 +34,8 @@ class Dashboard(Column):
         super().__init__()
         self.page = page
         self.scroll = ScrollMode.HIDDEN
-        self.data_barang = pd.DataFrame()
-        self.data_transaksi = pd.DataFrame()
+        self.data_barang = DataFrame()
+        self.data_transaksi = DataFrame()
         self.barang = SummaryContainer(
             title="Barang",
             count="",
@@ -88,7 +110,8 @@ class Dashboard(Column):
             self.barang.count_update(item["total_count"])
             self.barang.children.update_row(data)
         except Exception as ex:
-            print(ex)
+            # print(ex)
+            return
 
     def get_top_transaction(self):
         try:
@@ -112,11 +135,12 @@ class Dashboard(Column):
             self.transaksi.count_update(tsc_count["total_count"])
             self.transaksi.children.update_row(data)
         except Exception as ex:
-            print(ex)
+            # print(ex)
+            return
 
     def get_last_analysis(self):
 
-        def pattern_text(rule: pd.DataFrame):
+        def pattern_text(rule: DataFrame):
             return Text(
                 spans=[
                     TextSpan("Konsumen yang membeli "),
@@ -137,7 +161,7 @@ class Dashboard(Column):
                 ],
             )
 
-        def strategy_text(rule: pd.DataFrame):
+        def strategy_text(rule: DataFrame):
             return Text(
                 spans=[
                     TextSpan("Pertimbangkan bundling produk: "),
@@ -230,10 +254,10 @@ class Dashboard(Column):
             result.append(merged_entry)
 
         # Print the result
-        pd.set_option("display.width", 0)
-        pd.set_option("display.max_columns", None)
+        set_option("display.width", 0)
+        set_option("display.max_columns", None)
 
-        result_df = pd.DataFrame(result)
+        result_df = DataFrame(result)
         # print(result_df)
 
         self.buying_pattern.controls.clear()

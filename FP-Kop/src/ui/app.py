@@ -1,12 +1,26 @@
-import ast
-
-from flet import *
 from .screens import *
+from ast import literal_eval
 from .widgets import Sidebar
 from .utils import ROUTES, COLORS
 from urllib.parse import urlparse, parse_qs
 from core.analysis_results import AnalysisResults
-
+from flet import (
+    Container,
+    Text,
+    Page,
+    CrossAxisAlignment,
+    Icons,
+    padding,
+    Row,
+    VerticalDivider,
+    AlertDialog,
+    Colors,
+    MouseCursor,
+    GestureDetector,
+    Icon,
+    margin,
+    border_radius,
+)
 
 
 class SkripsiApp(Container):
@@ -76,7 +90,7 @@ class SkripsiApp(Container):
             self.nav_rail.selected_index = 1
             query_params = parse_qs(parsed_url.query)
             parameter = query_params.get("id_detail", [""])[0]
-            id_detail = ast.literal_eval(parameter)
+            id_detail = literal_eval(parameter)
             view = ShowTransactionUpdate(self.page, id_detail)
         elif parsed_url.path == ROUTES.SHOW_RESULT:
             self.nav_rail.selected_index = 2
@@ -100,8 +114,10 @@ class SkripsiApp(Container):
             self.nav_rail.selected_index = 3
             query_params = parse_qs(parsed_url.query)
             parameter = query_params.get("offset", [""])[0]
-            offset = ast.literal_eval(parameter)
-            view = ProcessTransaction(self.page, results=self.analysis_result, data_offset=offset)
+            offset = literal_eval(parameter)
+            view = ProcessTransaction(
+                self.page, results=self.analysis_result, data_offset=offset
+            )
         elif parsed_url.path == ROUTES.PROCESS:
             self.nav_rail.selected_index = 3
             view = Process(self.page, results=self.analysis_result)

@@ -1,12 +1,13 @@
+from pandas import DataFrame
 import pandas as pd
 
 class AnalysisResults:
     def __init__(self):
-        self._basket = pd.DataFrame()
-        self._itemsets = pd.DataFrame()
-        self._rules = pd.DataFrame()
-        self._items = pd.DataFrame()
-        self._transactions = pd.DataFrame()
+        self._basket = DataFrame()
+        self._itemsets = DataFrame()
+        self._rules = DataFrame()
+        self._items = DataFrame()
+        self._transactions = DataFrame()
         self._support = 0.0
         self._confidence = 0.0
         

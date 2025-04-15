@@ -1,16 +1,38 @@
-import pandas as pd
 import core.database as db
 
-from flet import *
+from pandas import DataFrame, set_option
 from collections import defaultdict
 from ui.widgets import LoadingDialog
+from flet import (
+    Column,
+    Page,
+    ScrollMode,
+    Icons,
+    DataColumn,
+    DataRow,
+    DataCell,
+    Text,
+    DataTable,
+    ControlState,
+    Colors,
+    TextStyle,
+    FontWeight,
+    Container,
+    TextThemeStyle,
+    Row,
+    TextButton,
+    AlertDialog,
+    TextSpan,
+    SnackBar,
+    ButtonStyle,
+)
 
 
 class ShowResult(Column):
     def __init__(self, page: Page):
         super().__init__()
         self.page = page
-        self.association_rules = pd.DataFrame()
+        self.association_rules = DataFrame()
         self.result_table = CustomTable(
             columns=["Nomor", "Waktu Analisis", "Jumlah Pola", ""],
             rows=[],
@@ -40,16 +62,16 @@ class ShowResult(Column):
         # print(result)
 
         if result:
-            df = pd.DataFrame(result["data"])
-            pd.set_option("display.width", 0)
-            pd.set_option("display.max_columns", None)
+            df = DataFrame(result["data"])
+            set_option("display.width", 0)
+            set_option("display.max_columns", None)
 
             # print(df)
             self.build_result_table_rows(df)
 
         loading.dismiss_dialog()
 
-    def build_result_table_rows(self, df: pd.DataFrame):
+    def build_result_table_rows(self, df: DataFrame):
         self.result_table.rows.clear()
         self.result_table.rows.extend(
             [
@@ -185,12 +207,12 @@ class ShowResult(Column):
             result.append(merged_entry)
 
         # Print the result
-        result_df = pd.DataFrame(result)
+        result_df = DataFrame(result)
         # print(result_df)
 
         # return
 
-        def pattern_text(rule: pd.DataFrame):
+        def pattern_text(rule: DataFrame):
             return Text(
                 spans=[
                     TextSpan("Konsumen yang membeli "),
@@ -211,7 +233,7 @@ class ShowResult(Column):
                 ],
             )
 
-        def strategy_text(rule: pd.DataFrame):
+        def strategy_text(rule: DataFrame):
             return Text(
                 spans=[
                     TextSpan("Pertimbangkan bundling produk: "),
@@ -284,7 +306,7 @@ class ShowResult(Column):
                                 controls=[
                                     pattern_text(rule)
                                     for rule in result_df.to_dict("records")
-                                ]
+                                ],
                             ),
                         ]
                     ),

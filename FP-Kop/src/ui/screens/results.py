@@ -1,11 +1,35 @@
-import pandas as pd
-import datetime as dt
 import core.database as db
 
-from flet import *
+from pandas import DataFrame
+from datetime import datetime
 from ui.utils import COLORS, ROUTES
 from core.analysis_results import AnalysisResults
 from ui.widgets import LoadingDialog, CustomButton, CustomSnackbar
+from flet import (
+    Column,
+    Page,
+    ScrollMode,
+    DataTable,
+    DataColumn,
+    DataRow,
+    DataCell,
+    Text,
+    Colors,
+    ControlState,
+    TextStyle,
+    FontWeight,
+    Container,
+    TextButton,
+    Row,
+    TextThemeStyle,
+    MainAxisAlignment,
+    Placeholder,
+    Divider,
+    ProgressRing,
+    GestureDetector,
+    MouseCursor,
+    TextSpan,
+)
 
 
 class Results(Column):
@@ -14,8 +38,8 @@ class Results(Column):
         self.page = page
         self.saved = False
         self.analysis_results = results
-        self.frequent_itemset = pd.DataFrame()
-        self.association_rules = pd.DataFrame()
+        self.frequent_itemset = DataFrame()
+        self.association_rules = DataFrame()
         self.save_button = CustomButton(
             text="Simpan",
             color=COLORS.PRIMARY,
@@ -283,8 +307,8 @@ class Results(Column):
 
         try:
             # save new record hasil analisis
-            saved_analisis = db.insert_analisis([(dt.datetime.now(),)])
-            print(f"ID ANALISIS : {saved_analisis}")
+            saved_analisis = db.insert_analisis([(datetime.now(),)])
+            # print(f"ID ANALISIS : {saved_analisis}")
             if not saved_analisis:
                 raise Exception("Gagal menyimpan hasil analisis")
 
@@ -298,7 +322,7 @@ class Results(Column):
                 raise Exception("Gagal menyimpan association rules")
 
             rules_ids = [item for tup in saved_rules for item in tup]
-            print("RULES IDS : ", rules_ids)
+            # print("RULES IDS : ", rules_ids)
 
             # save itemset (antecedents & consequents)
             antecedents = [
@@ -309,7 +333,7 @@ class Results(Column):
             if not saved_ante:
                 raise Exception("Gagal menyimpan antecedent")
             ante_ids = [item for tup in saved_ante for item in tup]
-            print("ANTECEDENTS : ", ante_ids)
+            # print("ANTECEDENTS : ", ante_ids)
 
             consequents = [
                 (", ".join(str(item) for item in rule["consequents"]), "consequents")
@@ -319,7 +343,7 @@ class Results(Column):
             if not saved_cons:
                 raise Exception("Gagal menyimpan consequents")
             cons_ids = [item for tup in saved_cons for item in tup]
-            print("CONSEQUENTS : ", cons_ids)
+            # print("CONSEQUENTS : ", cons_ids)
 
             # save ruleitems
             rule_items = [
@@ -329,13 +353,13 @@ class Results(Column):
             flattened_list = [
                 tuple_item for sublist in rule_items for tuple_item in sublist
             ]
-            print("RULE ITEMS : ", flattened_list)
+            # print("RULE ITEMS : ", flattened_list)
 
             if not db.insert_rule_items(flattened_list):
                 raise Exception("Gagal menyimpan hubungan rules dan itemset")
 
         except Exception as ex:
-            print(ex)
+            # print(ex)
             text = ex
             color = Colors.RED_600
             self.saved = False

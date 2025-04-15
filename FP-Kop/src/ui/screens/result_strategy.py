@@ -1,7 +1,18 @@
-from flet import *
 from ui.utils import ROUTES
 from ui.widgets import LoadingDialog
 from core.analysis_results import AnalysisResults
+from flet import (
+    Column,
+    Page,
+    ScrollMode,
+    Text,
+    Container,
+    TextButton,
+    Icons,
+    Row,
+    TextThemeStyle,
+    TextSpan,
+)
 
 
 class ResultStrategy(Column):

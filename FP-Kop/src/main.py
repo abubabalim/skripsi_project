@@ -1,6 +1,6 @@
 import core.database as database
 
-from flet import *
+from flet import Page, ThemeMode, Theme, SafeArea, app
 from ui.utils import ROUTES
 from ui.app import SkripsiApp
 

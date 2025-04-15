@@ -1,9 +1,27 @@
-import datetime as dt
 import core.database as db
 
-from flet import *
+from datetime import datetime
 from ui.utils import COLORS, ROUTES
 from ui.widgets import CustomButton, LoadingDialog, CustomSnackbar
+from flet import (
+    Column,
+    Page,
+    ScrollMode,
+    Text,
+    Colors,
+    TextStyle,
+    FontWeight,
+    Container,
+    TextThemeStyle,
+    Row,
+    AlertDialog,
+    TextField,
+    ListView,
+    KeyboardType,
+    NumbersOnlyInputFilter,
+    ListTile,
+    DatePicker,
+)
 
 
 class ShowTransactionUpdate(Column):
@@ -124,7 +142,7 @@ class ShowTransactionUpdate(Column):
             self.selected_item = list(
                 filter(lambda x: x["nama_barang"] == tsc["nama_barang"], self.items)
             )[0]
-            print(self.selected_item)
+            # print(self.selected_item)
 
         loading.dismiss_dialog()
 
@@ -140,13 +158,14 @@ class ShowTransactionUpdate(Column):
             self.kode_transaksi.update()
 
         def handle_dismissal(e):
-            print(f"DatePicker dismissed")
+            pass
+            # print(f"DatePicker dismissed")
 
         date_picker = DatePicker(
             open=True,
-            value=dt.datetime.strptime(self.tanggal_transaksi.value, "%d %B %Y"),
-            first_date=dt.datetime(year=2000, month=1, day=1),
-            last_date=dt.datetime(year=2500, month=12, day=31),
+            value=datetime.strptime(self.tanggal_transaksi.value, "%d %B %Y"),
+            first_date=datetime(year=2000, month=1, day=1),
+            last_date=datetime(year=2500, month=12, day=31),
             on_change=handle_change,
             on_dismiss=handle_dismissal,
         )
@@ -190,7 +209,7 @@ class ShowTransactionUpdate(Column):
             "jumlah": self.jumlah.value,
         }
 
-        print(self.id_detail, detil)
+        # print(self.id_detail, detil)
 
         # VALIDASI FORM
         self.kode_transaksi.error_text = (
@@ -223,12 +242,12 @@ class ShowTransactionUpdate(Column):
             if not response:
                 raise Exception("Gagal mengubah data detail transaksi")
         except Exception as ex:
-            print(f"Error: {ex}")
+            # print(f"Error: {ex}")
             text = ex
             color = Colors.RED_800
             updated = True
         else:
-            print("update success")
+            # print("update success")
             text = "Data transaksi berhasil diubah"
             color = Colors.GREEN_800
             updated = True

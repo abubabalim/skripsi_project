@@ -1,9 +1,9 @@
-import pandas as pd
 import core.database as db
 
-from flet import *
-from ui.utils import COLORS, TABLES
+from ui.utils import COLORS
+from pandas import DataFrame, read_csv, read_excel
 from ui.widgets import CustomButton, LoadingDialog, CustomSnackbar
+from flet import Column, Page, ScrollMode, Text, FilePicker, Colors, Container, TextThemeStyle, Row, FilePickerResultEvent
 
 
 class InputTransaction(Column):
@@ -12,7 +12,7 @@ class InputTransaction(Column):
         self.page = page
         self.scroll = ScrollMode.AUTO
         self.wrap = False
-        self.df = pd.DataFrame()
+        self.df = DataFrame()
         self.selected_file_text = Text()
         self.file_picker = FilePicker(on_result=self.picker_on_result)
         self.picker_button = CustomButton(
@@ -66,11 +66,11 @@ class InputTransaction(Column):
             if not isCsv and not isXlsx:
                 return {"status": False, "message": "Format file tidak didukung"}
 
-            df = pd.read_excel(file.path) if isXlsx else pd.read_csv(file.path)
+            df = read_excel(file.path) if isXlsx else read_csv(file.path)
             return {"status": True, "df": df}
 
         # check if its has "data barang" column
-        def check_column(df: pd.DataFrame):
+        def check_column(df: DataFrame):
             if df.empty:
                 return {"status": False, "message": "Data Kosong"}
 
@@ -113,12 +113,13 @@ class InputTransaction(Column):
             if not result["status"]:
                 raise Exception(result["message"])
         except FileExistsError as ex:
-            print(ex)
+            # print(ex)
+            pass
         except Exception as ex:
-            print(ex)
+            # print(ex)
             snackbar = CustomSnackbar(page=self.page, text=ex, color=Colors.RED)
             snackbar.display()
-            self.df = pd.DataFrame()
+            self.df = DataFrame()
             self.selected_file_text.value = ""
             self.selected_file_text.update()
             self.save_button.toggle_disable(True)
@@ -180,7 +181,7 @@ class InputTransaction(Column):
         except Exception as e:
             text = "Input data transaksi gagal, pastikan menggunakan data yang belum tersimpan di database"
             color = Colors.RED_800
-            print(e)
+            # print(e)
         else:
             text = "Input data transaksi berhasil"
             color = Colors.GREEN_800

@@ -1,6 +1,6 @@
-from flet import *
 from ui.utils import ROUTES, COLORS
 from ui.widgets import CustomButton
+from flet import Column, Page, ScrollMode, Text, Container, TextThemeStyle
 
 
 class Show(Column):

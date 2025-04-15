@@ -1,4 +1,4 @@
-from flet import *
+from flet import Row, Container, TextButton, Icons, Text, padding
 
 
 class CustomTableRow(Row):
@@ -11,7 +11,7 @@ class CustomTableRow(Row):
             )
             for index, item in enumerate(items)
         ]
-        print(items)
+        # print(items)
 
 
 class CustomTableCell(Container):

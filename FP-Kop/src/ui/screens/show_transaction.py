@@ -1,10 +1,43 @@
-import threading
-import datetime as dt
 import core.database as db
 
-from flet import *
+from threading import Timer
+from datetime import datetime
 from ui.utils import COLORS, ROUTES
 from ui.widgets import CustomButton, LoadingDialog, DateField, CustomSnackbar
+from flet import (
+    Column,
+    Page,
+    ScrollMode,
+    Icons,
+    DataColumn,
+    DataRow,
+    DataCell,
+    Text,
+    DataTable,
+    ControlState,
+    Colors,
+    TextStyle,
+    FontWeight,
+    Container,
+    TextThemeStyle,
+    Row,
+    TextButton,
+    AlertDialog,
+    TextSpan,
+    TextField,
+    padding,
+    GestureDetector,
+    MouseCursor,
+    Icon,
+    margin,
+    border_radius,
+    border,
+    CrossAxisAlignment,
+    Divider,
+    MainAxisAlignment,
+    ControlEvent,
+    DatePicker,
+)
 
 
 class ShowTransaction(Column):
@@ -28,7 +61,7 @@ class ShowTransaction(Column):
             text="Semua Transaksi",
             color=COLORS.PRIMARY,
             dynamic=False,
-            on_tap=lambda _:self.show_all(),
+            on_tap=lambda _: self.show_all(),
         )
         self.search_field = TextField(
             expand=True,
@@ -278,7 +311,7 @@ class ShowTransaction(Column):
             self.debounce_timer.cancel()
 
         # Start a new timer with a delay of 500ms
-        self.debounce_timer = threading.Timer(
+        self.debounce_timer = Timer(
             0.5,
             self.on_change_debounced,
             args=[e.control.value],
@@ -338,11 +371,15 @@ class ShowTransaction(Column):
         start = (
             self.start_date_field.value
             if not self.start_date_field.value == ""
-            else dt.datetime.now().strftime("%Y-%m-%d")
+            else datetime.now().strftime("%Y-%m-%d")
         )
-        end = self.end_date_field.value if not self.end_date_field.value == "" else dt.datetime.now().strftime("%Y-%m-%d")
+        end = (
+            self.end_date_field.value
+            if not self.end_date_field.value == ""
+            else datetime.now().strftime("%Y-%m-%d")
+        )
         date_value = (
-            dt.datetime.strptime(
+            datetime.strptime(
                 start if is_start else end,
                 "%Y-%m-%d",
             )
@@ -353,8 +390,8 @@ class ShowTransaction(Column):
         self.page.open(
             DatePicker(
                 value=date_value,
-                first_date=dt.datetime(year=2000, month=1, day=1),
-                last_date=dt.datetime(year=2500, month=12, day=31),
+                first_date=datetime(year=2000, month=1, day=1),
+                last_date=datetime(year=2500, month=12, day=31),
                 on_change=handle_change,
             ),
         )
@@ -399,7 +436,9 @@ class ShowTransaction(Column):
 
             try:
                 # delete from detail tranaksi
-                results = db.delete_detail_transaksi(transaction["id"], transaction["kode_transaksi"])
+                results = db.delete_detail_transaksi(
+                    transaction["id"], transaction["kode_transaksi"]
+                )
                 if not results:
                     raise Exception("Gagal menghapus data dari detail transaksi")
                 delete_success = True
@@ -436,7 +475,9 @@ class ShowTransaction(Column):
                 ]
             ),
             actions=[
-                TextButton("Iya", on_click=lambda _, item=transaction: confirm_delete(item)),
+                TextButton(
+                    "Iya", on_click=lambda _, item=transaction: confirm_delete(item)
+                ),
                 TextButton("Tidak", on_click=dismiss_dialog),
             ],
             actions_alignment=MainAxisAlignment.END,

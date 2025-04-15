@@ -1,4 +1,4 @@
-from flet import *
+from flet import SnackBar, Text, Page
 
 class CustomSnackbar(SnackBar):
     def __init__(self, page:Page, text, color = None, content = Text()):

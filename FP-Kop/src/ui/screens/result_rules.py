@@ -1,9 +1,27 @@
-import pandas as pd
-
-from flet import *
+from pandas import DataFrame
 from ui.utils import ROUTES
 from ui.widgets import LoadingDialog
 from core.analysis_results import AnalysisResults
+from flet import (
+    Column,
+    Page,
+    ScrollMode,
+    DataTable,
+    DataColumn,
+    DataRow,
+    DataCell,
+    Text,
+    Colors,
+    ControlState,
+    TextStyle,
+    FontWeight,
+    Container,
+    TextButton,
+    Icons,
+    Row,
+    TextThemeStyle,
+    TextSpan,
+)
 
 
 class ResultRules(Column):
@@ -119,7 +137,7 @@ class ResultRules(Column):
         loading.dismiss_dialog()
 
     def build_buying_pattern(self):
-        def pattern_text(rule: pd.DataFrame):
+        def pattern_text(rule: DataFrame):
             return Text(
                 spans=[
                     TextSpan("Konsumen yang membeli "),

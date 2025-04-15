@@ -1,7 +1,26 @@
-from flet import *
 from ui.utils import COLORS, ROUTES
 from core.analysis_results import AnalysisResults
 from ui.widgets import LoadingDialog, CustomButton
+from flet import (
+    Column,
+    Page,
+    ScrollMode,
+    DataTable,
+    DataColumn,
+    Text,
+    ControlState,
+    Colors,
+    TextStyle,
+    FontWeight,
+    Container,
+    TextButton,
+    Icons,
+    TextThemeStyle,
+    Row,
+    MainAxisAlignment,
+    DataRow,
+    DataCell,
+)
 
 
 class ProcessTransaction(Column):

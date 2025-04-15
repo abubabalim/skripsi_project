@@ -1,9 +1,27 @@
-import threading
-
-from flet import *
+from threading import Timer
 from ui.utils import ROUTES
 from ui.widgets import LoadingDialog
 from core.analysis_results import AnalysisResults
+from flet import (
+    Column,
+    Page,
+    ScrollMode,
+    TextField,
+    Icons,
+    DataTable,
+    DataColumn,
+    Text,
+    ControlState,
+    Colors,
+    TextStyle,
+    FontWeight,
+    Container,
+    TextButton,
+    TextThemeStyle,
+    Row,
+    DataRow,
+    DataCell,
+)
 
 
 class ProcessItem(Column):
@@ -79,7 +97,7 @@ class ProcessItem(Column):
     def build_items_table_row(self, sort_by, asc):
         loading = LoadingDialog(page=self.page)
         loading.display_dialog()
-        
+
         items = self.results.items
         self.items_table.rows.clear()
         self.items_table.rows.extend(
@@ -114,7 +132,7 @@ class ProcessItem(Column):
             self.debounce_timer.cancel()
 
         # Start a new timer with a delay of 500ms
-        self.debounce_timer = threading.Timer(
+        self.debounce_timer = Timer(
             1.5,
             self.on_change_debounced,
             args=[e.control.value],

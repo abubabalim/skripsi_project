@@ -1,5 +1,17 @@
-from flet import *
 from ui.utils import COLORS
+from flet import (
+    GestureDetector,
+    MouseCursor,
+    Text,
+    TextAlign,
+    TextStyle,
+    Container,
+    Colors,
+    Row,
+    padding,
+    border,
+    border_radius,
+)
 
 
 class CustomButton(GestureDetector):
@@ -11,7 +23,7 @@ class CustomButton(GestureDetector):
         disabled=False,
         outlined=False,
         visible=True,
-        on_tap = None,
+        on_tap=None,
     ):
         super().__init__()
         self.on_tap = on_tap
@@ -20,12 +32,16 @@ class CustomButton(GestureDetector):
         self.visible = visible
         self.color = color
         self.dynamic = dynamic
-        self.mouse_cursor = MouseCursor.CLICK if not self.disabled else MouseCursor.BASIC
+        self.mouse_cursor = (
+            MouseCursor.CLICK if not self.disabled else MouseCursor.BASIC
+        )
         self.text = Text(
             text,
             text_align=TextAlign.CENTER,
             expand=True,
-            style=TextStyle(size=14, color=Colors.WHITE if not outlined else Colors.BLACK),
+            style=TextStyle(
+                size=14, color=Colors.WHITE if not outlined else Colors.BLACK
+            ),
         )
         self.content = Container(
             bgcolor=self.color if not self.disabled else Colors.GREY_400,
@@ -42,7 +58,7 @@ class CustomButton(GestureDetector):
             border_radius=border_radius.all(6),
             content=(Row(controls=[self.text]) if dynamic else self.text),
         )
-        
+
     def toggle_disable(self, value):
         self.disabled = value
         self.mouse_cursor = MouseCursor.CLICK if not value else MouseCursor.BASIC

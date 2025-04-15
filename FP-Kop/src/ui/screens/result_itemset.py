@@ -1,7 +1,25 @@
-from flet import *
 from ui.utils import ROUTES
 from ui.widgets import LoadingDialog
 from core.analysis_results import AnalysisResults
+from flet import (
+    Column,
+    Page,
+    ScrollMode,
+    DataTable,
+    DataColumn,
+    DataRow,
+    DataCell,
+    Text,
+    Colors,
+    ControlState,
+    TextStyle,
+    FontWeight,
+    Container,
+    TextButton,
+    Icons,
+    Row,
+    TextThemeStyle,
+)
 
 
 class ResultItemset(Column):
@@ -61,7 +79,9 @@ class ResultItemset(Column):
             [
                 DataRow(
                     cells=[
-                        DataCell(Text(", ".join(str(item) for item in item["itemsets_nama"]))),
+                        DataCell(
+                            Text(", ".join(str(item) for item in item["itemsets_nama"]))
+                        ),
                         DataCell(Text(round(item["support"], 5))),
                     ],
                 )
