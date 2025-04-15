@@ -1,0 +1,16 @@
+; Ini adalah contoh file konfigurasi.
+; Salin file ini menjadi 'config.ini' dan ubah nilai-nilai di bawah ini
+; sesuai dengan konfigurasi lingkungan Anda.
+; Baris yang dimulai dengan ';' adalah komentar dan akan diabaikan.
+
+[Database]
+host = alamat_server_mysql  ; Ganti dengan host database Anda (misalnya, localhost atau IP)
+user = nama_pengguna_db    ; Ganti dengan nama pengguna database Anda
+password = kata_sandi_db      ; Ganti dengan kata sandi database Anda
+database = nama_database       ; Ganti dengan nama database yang akan digunakan
+port = 3306                  ; Port default MySQL adalah 3306, ubah jika berbeda
+
+[Application]
+theme = default              ; Biarkan 'default' atau ganti dengan nama tema kustom (jika ada)
+language = en                 ; Kode bahasa default aplikasi (misalnya, 'en' untuk Inggris, 'id' untuk Indonesia)
+log_level = INFO             ; Tingkat logging yang diinginkan (DEBUG, INFO, WARNING, ERROR, CRITICAL)
