@@ -1,5 +1,6 @@
-flet
-mysql-connector-python
-pandas
-mlxtend
-openpyxl
+flet>=0.27.6
+mysql-connector-python>=9.0.0
+pandas>=2.1.4
+mlxtend>=0.23.1
+openpyxl>=3.1.2
+pyinstaller>=6.12.0
